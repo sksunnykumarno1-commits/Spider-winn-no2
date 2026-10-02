@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Spider Winn</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#202124}
+header{background:linear-gradient(135deg,#151b5b,#3949ab);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:5}
+.brand{font-size:25px;font-weight:800}.sub{opacity:.8;font-size:12px}
+.container{max-width:1050px;margin:auto;padding:18px}
+.card{background:#fff;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 5px 20px #00000010}
+.balance{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.balance strong{font-size:30px}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer}
+.primary{background:#3949ab;color:#fff}.green{background:#0b9f62;color:#fff}.red{background:#d93025;color:#fff}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.actions button{padding:14px 5px;border:1px solid #ddd;background:#fff;border-radius:12px;cursor:pointer}
+h2{margin:8px 0}.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.offer{border:1px solid #e5e7ef;border-radius:16px;padding:16px;position:relative;overflow:hidden}
+.offer.pop{border:2px solid #3949ab}.tag{position:absolute;right:10px;top:10px;background:#3949ab;color:white;padding:5px 8px;border-radius:8px;font-size:11px}
+.price{font-size:25px;font-weight:800}.return{font-size:21px;color:#0b9f62;font-weight:800}.profit{color:#0b9f62;margin:5px 0 12px}
+.offer .btn{width:100%}
+.logos{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.logo{height:70px;border-radius:12px;background:#f7f8fc;display:flex;align-items:center;justify-content:center;font-weight:800;color:#555}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;border-bottom:1px solid #eee}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:center;justify-content:center;padding:15px}
+.modalbox{background:#fff;width:min(430px,100%);border-radius:18px;padding:20px}
+input{width:100%;padding:13px;margin:7px 0 12px;border:1px solid #ccd1dc;border-radius:10px;font-size:16px}
+.close{float:right;border:0;background:none;font-size:25px;cursor:pointer}
+.notice{font-size:12px;color:#666;background:#f7f7f7;padding:10px;border-radius:10px;margin-top:10px}
+footer{text-align:center;color:#777;font-size:12px;padding:25px}
+@media(max-width:600px){.actions{grid-template-columns:1fr 1fr}.logos{grid-template-columns:1fr 1fr}.container{padding:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="container" style="padding:0">
+    <div class="brand">SPIDER WINN</div>
+    <div class="sub">Investment-style account interface</div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <div class="balance">
+      <div><div style="color:#777">Available Balance</div><strong id="balance">₹0</strong></div>
+      <button class="btn red" onclick="openWithdraw()">Withdraw</button>
+    </div>
+    <div class="actions">
+      <button onclick="openDeposit()">💳<br>Deposit</button>
+      <button onclick="openWithdraw()">↗️<br>Withdraw</button>
+      <button onclick="showTransactions()">📋<br>Transactions</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Special Offers</h2>
+    <p>Get your return within <b>1 Hour</b></p>
+    <div class="offers" id="offers"></div>
+  </section>
+
+  <section class="card">
+    <h2>Featured Partners</h2>
+    <div class="logos">
+      <div class="logo">PARTNER A</div><div class="logo">PARTNER B</div>
+      <div class="logo">PARTNER C</div><div class="logo">PARTNER D</div>
+    </div>
+  </section>
+
+  <section class="card" id="tx">
+    <h2>Transactions</h2>
+    <div id="transactions">No transactions yet.</div>
+  </section>
+</main>
+
+<div class="modal" id="withdrawModal">
+ <div class="modalbox">
+  <button class="close" onclick="closeModal('withdrawModal')">×</button>
+  <h2>Withdraw</h2>
+  <label>Amount</label>
+  <input id="withdrawAmount" type="number" min="100" placeholder="Minimum ₹100">
+  <label>UPI ID</label>
+  <input id="upi" type="text" placeholder="example@upi">
+  <button class="btn red" style="width:100%" onclick="submitWithdraw()">Submit Withdrawal</button>
+  <div class="notice">This prototype does not send money or connect to a bank/UPI service.</div>
+ </div>
+</div>
+
+<div class="modal" id="depositModal">
+ <div class="modalbox">
+  <button class="close" onclick="closeModal('depositModal')">×</button>
+  <h2>Deposit</h2>
+  <label>Amount</label>
+  <input id="depositAmount" type="number" min="1" placeholder="Enter amount">
+  <button class="btn primary" style="width:100%" onclick="submitDeposit()">Continue</button>
+  <div class="notice">Payment processing is disabled in this prototype.</div>
+ </div>
+</div>
+
+<div class="modal" id="loginModal">
+ <div class="modalbox">
+  <button class="close" onclick="closeModal('loginModal')">×</button>
+  <h2>Sign up / Login</h2>
+  <input placeholder="Mobile number">
+  <input type="email" placeholder="Gmail address">
+  <button class="btn primary" style="width:100%" onclick="closeModal('loginModal');alert('Account interface ready.')">Continue</button>
+ </div>
+</div>
+
+<footer>Prototype interface — no real-money transactions, deposits, or withdrawals are processed.</footer>
+
+<script>
+const offers=[
+ [99,199,100],[199,399,200],[299,599,300],[399,999,600],
+ [599,1299,700],[999,1999,1000],[1499,2999,1500],
+ [1999,3999,2000],[2999,5999,3000]
+];
+let balance=0, transactions=[];
+
+function money(n){return '₹'+Number(n).toLocaleString('en-IN')}
+function renderOffers(){
+ const box=document.getElementById('offers');
+ box.innerHTML=offers.map((o,i)=>`
+ <div class="offer ${i===1?'pop':''}">
+   ${i===1?'<span class="tag">POPULAR</span>':''}
+   <div class="price">${money(o[0])}</div>
+   <div>1 Hour</div>
+   <hr>
+   <div>Invest <b>${money(o[0])}</b></div>
+   <div class="return">You Get Back ${money(o[1])}</div>
+   <div class="profit">Profit +${money(o[2])}</div>
+   <button class="btn primary" onclick="buy(${o[0]})">Buy Now</button>
+ </div>`).join('');
+}
+function buy(amount){
+ alert('This prototype does not accept real payments. Offer selected: '+money(amount));
+}
+function openWithdraw(){document.getElementById('withdrawModal').style.display='flex'}
+function openDeposit(){document.getElementById('depositModal').style.display='flex'}
+function closeModal(id){document.getElementById(id).style.display='none'}
+function submitWithdraw(){
+ const amount=Number(document.getElementById('withdrawAmount').value);
+ const upi=document.getElementById('upi').value.trim();
+ if(amount<100){alert('Minimum withdrawal is ₹100.');return}
+ if(!upi){alert('Please enter UPI ID.');return}
+ transactions.unshift({type:'Withdrawal',amount,detail:upi,status:'Pending'});
+ closeModal('withdrawModal'); renderTx();
+ alert('Withdrawal request saved in the interface.');
+}
+function submitDeposit(){
+ const amount=Number(document.getElementById('depositAmount').value);
+ if(amount<=0){alert('Enter a valid amount.');return}
+ transactions.unshift({type:'Deposit',amount,detail:'Prototype entry',status:'Pending'});
+ closeModal('depositModal'); renderTx();
+ alert('Deposit interface opened. No real payment was processed.');
+}
+function renderTx(){
+ const el=document.getElementById('transactions');
+ if(!transactions.length){el.textContent='No transactions yet.';return}
+ el.innerHTML='<table><tr><th>Type</th><th>Amount</th><th>Details</th><th>Status</th></tr>'+
+ transactions.map(t=>`<tr><td>${t.type}</td><td>${money(t.amount)}</td><td>${t.detail}</td><td>${t.status}</td></tr>`).join('')+'</table>';
+}
+function showTransactions(){document.getElementById('tx').scrollIntoView({behavior:'smooth'})}
+renderOffers();renderTx();
+setTimeout(()=>document.getElementById('loginModal').style.display='flex',400);
+</script>
+</body>
+</html>
